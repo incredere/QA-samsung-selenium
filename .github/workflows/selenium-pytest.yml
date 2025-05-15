@@ -28,8 +28,11 @@ jobs:
         run: |
           sudo apt update || true
           sudo apt install -y --no-install-recommends wget unzip
+          
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+          # Suppress non-zero exit if service restarts are blocked
+          sudo apt install -y --no-install-recommends ./google-chrome-stable_current_amd64.deb || echo "Ignoring Chrome install exit code"
+
           CHROME_VERSION=$(google-chrome --version | cut -d " " -f3 | cut -d "." -f1)
           DRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
           wget "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip"
