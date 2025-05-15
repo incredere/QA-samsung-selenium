@@ -26,8 +26,8 @@ jobs:
 
       - name: Download Chrome & chromedriver
         run: |
-          sudo apt update
-          sudo apt install -y wget unzip
+          sudo apt update || true
+          sudo apt install -y --no-install-recommends wget unzip
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo apt install -y ./google-chrome-stable_current_amd64.deb
           CHROME_VERSION=$(google-chrome --version | cut -d " " -f3 | cut -d "." -f1)
