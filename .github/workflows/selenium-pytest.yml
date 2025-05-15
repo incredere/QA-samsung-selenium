@@ -29,7 +29,6 @@ jobs:
         run: |
           sudo apt update || true
           sudo apt install -y --no-install-recommends wget unzip
-
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo apt install -y --no-install-recommends ./google-chrome-stable_current_amd64.deb
 
@@ -43,3 +42,10 @@ jobs:
       - name: Run pytest suite
         run: |
           pytest tests/test_samsung_homepage_logo_resilient.py --disable-warnings --maxfail=1 -v
+
+      - name: Upload screenshots (if any)
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: selenium-screenshots
+          path: screenshots/
