@@ -2,6 +2,7 @@
 import pytest
 import os
 import time
+import tempfile
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -13,10 +14,15 @@ from webdriver_manager.chrome import ChromeDriverManager
 @pytest.fixture(scope="module")
 def driver():
     options = Options()
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.add_argument('--headless=new')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    temp_profile = tempfile.TemporaryDirectory()
+    options.add_argument(f'--user-data-dir={temp_profile.name}')
+
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.set_window_size(1920, 1080)
     driver.get("https://www.samsung.com/")
-    driver.maximize_window()
     time.sleep(3)
     yield driver
     driver.quit()
@@ -87,8 +93,7 @@ def test_url_contains_samsung(driver):
     take_screenshot(driver, "url_check")
 
 def test_product_section_visible(driver):
-    wait = WebDriverWait(driver, 10)
-    section = wait.until(EC.presence_of_element_located((
+    section = WebDriverWait(driver, 10).until(EC.presence_of_element_located((
         By.CSS_SELECTOR, "section[class*='featured'], section[class*='hero'], section[class*='product'], div[class*='card'], div[class*='tile']"
     )))
     assert section.is_displayed()
