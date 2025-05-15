@@ -39,4 +39,4 @@ jobs:
 
       - name: Run pytest suite
         run: |
-          pytest test_samsung_homepage_logo_resilient.py --disable-warnings --maxfail=1 -v
+          pytest tests/test_samsung_homepage_logo_resilient.py --disable-warnings --maxfail=1 -v
